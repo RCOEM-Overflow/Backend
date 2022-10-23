@@ -37,6 +37,7 @@ def get_all_questions():
                   returnmap['question'] = data['question']
                   returndata.append(returnmap)
 
+      returndata.reverse()
       return returndata
 
 ###############################################################################
