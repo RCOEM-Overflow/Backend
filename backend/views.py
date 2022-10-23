@@ -350,8 +350,8 @@ def upvote_question(request):
 def upvote_answer(request):
     """
     {
-            "question":"Hello World !! Kush here :)",
-            "answer":"Hello World !! Kush here :)"
+        "question":"Hello World !! Kush here :)",
+        "answer":"answer 111"
     }
     """
     try:
@@ -360,8 +360,8 @@ def upvote_answer(request):
         if serializer.is_valid():
             question = serializer.data['question']
             answer = serializer.data['answer']
-            print(question)
-            print(answer)
+            # print(question)
+            # print(answer)
             upvote_ans(question, answer)  
             return Response(status=status.HTTP_200_OK)
         else:

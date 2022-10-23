@@ -463,23 +463,41 @@ def upvote_ans(question, answer):
       data = qdata[0].to_dict()
       
       dict={
-            'answers': data['answers'],
-            'author': data['author'],
-            'question': data['question'],
-            'upvotes': data['upvotes'],
-            'views': data['views']
+            "answers": data['answers'],
+            "author": data['author'],
+            "question": data['question'],
+            "upvotes": data['upvotes'],
+            "views": data['views']
       }
       
       index=0
       
-      for ans in dict['answers']:
-            if(ans['answer']==answer):
-                  print("found")
-                  dict['answers'][index]['upvotes']=dict['answers'][index]['upvotes']+1
+      for ans in dict["answers"]:
+            if(ans["answer"]==answer):
+                  # print("found")
+                  # print(ans)
+                  dict["answers"][index]["upvotes"] = dict["answers"][index]["upvotes"] + 1
+                  # print(ans)
                   break
-            index=index=1     
+            index=index+1     
 
-      data = db.collection("questions").document(quenum).set(dict)
+      # print(quenum)
+      # print(dict)
+      db.collection("questions").document(quenum).set(dict)
 ###############################################################################
 ###############################################################################
 ###############################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
