@@ -32,6 +32,5 @@
 
 ## Pending
 
-- ? mark at end
 - get tagwise question
 - forgot password

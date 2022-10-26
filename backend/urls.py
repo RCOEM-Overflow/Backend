@@ -43,7 +43,6 @@ urlpatterns = [
     path('view_unanswered_questions',views.view_unanswered_questions),
 	path('view_specific_question',views.view_specific_question),
 
-    
 	path('add_question',views.add_question),
 	path('add_answer',views.add_answer),
 

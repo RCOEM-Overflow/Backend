@@ -124,6 +124,10 @@ def add_question_db(question, author, tags):
             tags = tags.upper()
             tags = tags.split(" ");
             
+            if(question.endswith('?')==False):
+                  print("not")
+                  question = question + "?"
+                  
             data = {
                   'question': question,
                   'answers': [],
