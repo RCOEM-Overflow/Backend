@@ -209,17 +209,21 @@ def add_question(request):
     {
             "username": "demouser1",
             "password":"pswd_1",
-            "question":"How to be a full stack developer2?"
+            "question":"How to become 5 star on codechef",
+            "tags":"competitive-programming cp dsa"
     }
     """
     serializer = AddQuestionSerializer(data=request.data)
 
     if serializer.is_valid():
+        
         data = serializer.data
         question = data['question']
         username = data['username']
         password = data['password']
-        check = checkUser(username, password,question)
+        tags = data['tags']
+        
+        check = checkUser(username, password,question,tags)
         if(check == True):
             return Response("Question added successfully")
         else:

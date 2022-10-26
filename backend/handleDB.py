@@ -91,15 +91,19 @@ def get_unanswered_questions():
 
 ###############################################################################
 
-def checkUser(username, password,question):
-      user = db.collection('users').document(username).get()
-      getuser=user.to_dict()
-      pas=getuser['password']
-      if(pas==password):
-            author=getuser['name']
-            add_question_db(question,author)
-            return True
-      else :
+def checkUser(username, password,question,tags):
+      try:
+            user = db.collection('users').document(username).get()
+            getuser=user.to_dict()
+            pas=getuser['password']
+            if(pas==password):
+                  author=getuser['name']
+                  add_question_db(question,author,tags)
+                  return True
+            else :
+                  return False
+      except:
+            print("Error in checkUser")
             return False
 
 def checkUser2(username, password,question,answer):
@@ -114,20 +118,31 @@ def checkUser2(username, password,question,answer):
             return False
 ###############################################################################
 
-def add_question_db(question, author):
-      data = {
-            'question': question,
-            'answers': [],
-            'upvotes': 0,
-            'views': 0,
-            'author': author,
-      }
-      index = db.collection('index').document('index').get()
-      getindex = index.to_dict()
-      index = getindex['index']+1
-      db.collection('index').document('index').update({'index': index})
-      question_no = 'question'+str(index)
-      db.collection('questions').document(question_no).set(data)
+def add_question_db(question, author, tags):
+      
+      try:
+            tags = tags.upper()
+            tags = tags.split(" ");
+            
+            data = {
+                  'question': question,
+                  'answers': [],
+                  'upvotes': 0,
+                  'views': 0,
+                  'author': author,
+                  'tags': tags
+            }
+            
+            index = db.collection('index').document('index').get()
+            getindex = index.to_dict()
+            index = getindex['index']+1
+            db.collection('index').document('index').update({'index': index})
+            question_no = 'question'+str(index)
+            db.collection('questions').document(question_no).set(data)
+            
+      except:
+            print("Error in add_question_db")
+            return False
 
 ###############################################################################
 
