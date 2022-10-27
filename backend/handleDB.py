@@ -33,6 +33,10 @@ def get_all_questions():
                   returnmap['views'] = data['views']
                   returnmap['upvotes'] = data['upvotes']
                   returnmap['question'] = data['question']
+                  
+                  if(data['anonymous']==True):
+                        returnmap['author'] = "Anonymous"
+                        
                   returndata.append(returnmap)
 
       returndata.reverse()
@@ -79,6 +83,10 @@ def get_unanswered_questions():
             if(answerlen == 0):
                   returnmap['author'] = data['author']
                   returnmap['question'] = data['question']
+                  
+                  if(data['anonymous']==True):
+                        returnmap['author'] = "Anonymous"
+                        
                   returndata.append(returnmap)
 
       return returndata
@@ -172,6 +180,9 @@ def get_specific_question(question):
       
       data = data.get().to_dict()
       
+      if(data['anonymous']==True):
+            data['author'] = "Anonymous"
+      
       return data
 
 ###############################################################################
@@ -203,6 +214,10 @@ def get_trending_questions():
             returnmap['views'] = data['views']
             returnmap['upvotes'] = data['upvotes']
             returnmap['question'] = data['question']
+            
+            if(data['anonymous']==True):
+                  returnmap['author'] = "Anonymous"
+                  
             returndata.append(returnmap)
       return returndata
 
