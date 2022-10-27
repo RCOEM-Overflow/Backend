@@ -81,8 +81,8 @@ def login(request):
         email = data['email']
         password = data['password']
 
-        print(email)
-        print(password)
+        # print(email)
+        # print(password)
 
         if(check_email_exist(email) == 1):
 
@@ -164,6 +164,50 @@ def register_contributor(request):
                 return Response("PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
 
     return Response("INVALID DATA", status=status.HTTP_400_BAD_REQUEST)
+
+###############################################################################
+    
+@api_view(['POST'])
+def update_password(request):
+    """
+    {
+        "email": "demouser4@gmail.com",
+        "password": "updated_password"
+    }
+    """
+    serializer = UpdatePasswordSerializer(data=request.data)
+
+    if serializer.is_valid():
+        data = serializer.data
+        
+        email = data['email']
+        password = data['password']
+
+        # print(email)
+        # print(password)
+
+        if(check_email_exist(email) == 1):
+
+            if(updatePassword(email, password) == 1):
+                print("Password Updated Successfully")
+                return Response("Password Updated Successfully", status=status.HTTP_200_OK)
+            else:
+                print("Cant update Password")
+                return Response("FAILED TO UPDATE PASSWORD, PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
+
+        elif(check_email_exist(email) == -1):
+            print("Cant verify email (-1)")
+            return Response("PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
+
+        else:
+            print("EMAIL DOES NOT EXIST")
+            return Response("EMAIL DOES NOT EXIST", status=status.HTTP_404_NOT_FOUND)
+
+    else:
+        return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
+
+
+###############################################################################
 
 ###############################################################################
 
@@ -281,6 +325,12 @@ def view_specific_question(request):
 
 @api_view(['GET'])
 def all_tags(request):
+    data=get_all_tags()
+    return Response(data, status=status.HTTP_200_OK)   
+###############################################################################
+
+@api_view(['GET'])
+def specific_tag(request):
     data=get_all_tags()
     return Response(data, status=status.HTTP_200_OK)   
 

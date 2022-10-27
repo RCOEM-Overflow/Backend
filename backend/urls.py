@@ -27,10 +27,10 @@ urlpatterns = [
 	path('register',views.register),
 	path('login',views.login),
 	path('register_contributor',views.register_contributor),
+	path('update_password',views.update_password),
 
 	path('all_contributors',views.all_contributors),
 	path('all_users',views.all_users),
-	path('all_tags',views.all_tags),
 
 	path('top5_contributors',views.top5_contributors),
 	path('total_users_count',views.total_users_count),
@@ -48,6 +48,9 @@ urlpatterns = [
 
 	path('upvote_question',views.upvote_question),
 	path('upvote_answer',views.upvote_answer),
+
+	path('all_tags',views.all_tags),
+	path('specific_tag',views.specific_tag),
 
 
 ]

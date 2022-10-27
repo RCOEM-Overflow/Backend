@@ -100,6 +100,8 @@ def checkUser(username, password,question,tags):
             print("Error in checkUser")
             return False
 
+###############################################################################
+
 def checkUser2(username, password,question,answer):
       user = db.collection('users').document(username).get()
       getuser=user.to_dict()
@@ -493,6 +495,19 @@ def get_total_questions_count():
       data = db.collection('questions').get()
       return len(data)
 
+###############################################################################
+
+def updatePassword(email,newpassword):
+      try:
+            user = db.collection("users").where('email', '==', email).get()
+            username = user[0].id
+            user = db.collection("users").document(username)
+            user.update({
+                  'password': newpassword
+            })
+            return 1
+      except:
+            return -1
 ###############################################################################
 
 # def update_questions_data_manually():
