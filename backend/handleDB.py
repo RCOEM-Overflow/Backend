@@ -17,9 +17,7 @@ def check():
 ###############################################################################
 
 def get_all_questions():
-      index = db.collection('index').document('index').get()
-      getindex = index.to_dict()
-      index = getindex['index']
+      index = get_total_questions_count()
       returndata = []
 
       for i in range(index):
@@ -43,9 +41,7 @@ def get_all_questions():
 ###############################################################################
 
 def get_search_questions():
-      index = db.collection('index').document('index').get()
-      getindex = index.to_dict()
-      index = getindex['index']
+      index = get_total_questions_count()
       returndata = []
 
       for i in range(index):
@@ -71,9 +67,7 @@ def get_search_questions():
 ###############################################################################
 
 def get_unanswered_questions():
-      index = db.collection('index').document('index').get()
-      getindex = index.to_dict()
-      index = getindex['index']
+      index = get_total_questions_count()
       returndata = []
 
       for i in range(index):
@@ -137,10 +131,8 @@ def add_question_db(question, author, tags):
                   'tags': tags
             }
             
-            index = db.collection('index').document('index').get()
-            getindex = index.to_dict()
-            index = getindex['index']+1
-            db.collection('index').document('index').update({'index': index})
+            index = get_total_questions_count()
+            index = index+1
             question_no = 'question'+str(index)
             db.collection('questions').document(question_no).set(data)
             
@@ -171,22 +163,19 @@ def add_answer_db(question, author, answer):
 
 def get_specific_question(question):
       qdata = db.collection('questions').where("question", "==", question).get()
-      qdata = qdata[0].to_dict()
-      data = {
-            'question': qdata['question'],
-            'views': qdata['views'],
-            'upvotes': qdata['upvotes'],
-            'author': qdata['author'],
-            'answers': qdata['answers']
-      }
+      quenum = qdata[0].id
+      
+      data = db.collection('questions').document(quenum)
+      data.update({'views': firestore.Increment(1)})
+      
+      data = data.get().to_dict()
+      
       return data
 
 ###############################################################################
 
 def get_trending_questions():
-      index = db.collection('index').document('index').get()
-      getindex = index.to_dict()
-      index = getindex['index']
+      index = get_total_questions_count()
       returndata = []
       dic = {}
       for i in range(index):
@@ -355,7 +344,7 @@ def get_all_tags():
       my_list = sorted(my_list, key=lambda k: k['questions'], reverse=True)
       return my_list
       
-print(get_all_tags())
+# print(get_all_tags())
 
 ###############################################################################
 
@@ -431,13 +420,6 @@ def get_total_users_count():
       count=data['total_users']
       return count
       
-###############################################################################
-
-def get_total_questions_count():
-      data = db.collection("index").document('index').get()
-      data=data.to_dict()
-      count=data['index']
-      return count
       
 ###############################################################################
 
@@ -504,9 +486,36 @@ def upvote_ans(question, answer):
       # print(quenum)
       # print(dict)
       db.collection("questions").document(quenum).set(dict)
+      
+###############################################################################
+
+def get_total_questions_count():
+      data = db.collection('questions').get()
+      return len(data)
+
+###############################################################################
+
+# def update_questions_data_manually():
+#       index = get_total_questions_count()
+      
+#       for i in range(index):
+#             question_no = 'question'+str(i+1)
+#             data = db.collection('questions').document(question_no)
+#             data.update({
+#                   'anonymous': False,
+#                   'views':100,
+#                   'upvotes':20
+#             })
+            
+#       return "Questions data updated manually"
+
+# print(update_questions_data_manually())
+
 ###############################################################################
 ###############################################################################
-###############################################################################
+
+            
+      
 
 
 
