@@ -30,7 +30,10 @@
 - upvote_question
 - upvote_answer
 
-## Pending
-
+- get all tags
 - get tagwise question
 - forgot password
+
+## Pending
+
+
