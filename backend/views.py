@@ -209,8 +209,6 @@ def update_password(request):
 
 ###############################################################################
 
-###############################################################################
-
 
 @api_view(['GET'])
 def view_all_questions(request):
@@ -321,18 +319,7 @@ def view_specific_question(request):
     data = get_specific_question(question)
     return Response(data)
 
-###############################################################################
 
-@api_view(['GET'])
-def all_tags(request):
-    data=get_all_tags()
-    return Response(data, status=status.HTTP_200_OK)   
-###############################################################################
-
-@api_view(['GET'])
-def specific_tag(request):
-    data=get_all_tags()
-    return Response(data, status=status.HTTP_200_OK)   
 
 ###############################################################################
 
@@ -424,5 +411,31 @@ def upvote_answer(request):
         return Response("ERROR", status=status.HTTP_400_BAD_REQUEST)
         
 ###############################################################################
+
+@api_view(['GET'])
+def all_tags(request):
+    data=get_all_tags()
+    return Response(data, status=status.HTTP_200_OK)   
+
+###############################################################################
+
+@api_view(['POST'])
+def tagwise_question(request):
+    """
+    {
+        "tag":"cp"
+    }
+    """
+    try:
+        serializer = SpecificTagSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            tag = serializer.data['tag']
+            data = questionsByTag(tag)  
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response("ERROR IN QUESTIONS BY TAG", status=status.HTTP_400_BAD_REQUEST) 
 
 ###############################################################################

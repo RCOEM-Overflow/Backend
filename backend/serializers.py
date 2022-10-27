@@ -86,4 +86,9 @@ class UpvoteAnswerSerializer(serializers.Serializer):
 
 ###############################################################################
 
+class SpecificTagSerializer(serializers.Serializer):
+    tag = serializers.CharField(max_length=10000)
+
+###############################################################################
+
 

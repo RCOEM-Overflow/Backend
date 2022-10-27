@@ -50,7 +50,7 @@ urlpatterns = [
 	path('upvote_answer',views.upvote_answer),
 
 	path('all_tags',views.all_tags),
-	path('specific_tag',views.specific_tag),
+	path('tagwise_question',views.tagwise_question),
 
 
 ]

@@ -508,10 +508,11 @@ def updatePassword(email,newpassword):
             return 1
       except:
             return -1
+      
 ###############################################################################
 
 # def update_questions_data_manually():
-#       index = get_total_questions_count()
+#      index = get_total_questions_count()
       
 #       for i in range(index):
 #             question_no = 'question'+str(i+1)
@@ -519,7 +520,8 @@ def updatePassword(email,newpassword):
 #             data.update({
 #                   'anonymous': False,
 #                   'views':100,
-#                   'upvotes':20
+#                   'upvotes':20,
+#                   'tags':['HTML','CSS','JAVA']
 #             })
             
 #       return "Questions data updated manually"
@@ -527,6 +529,25 @@ def updatePassword(email,newpassword):
 # print(update_questions_data_manually())
 
 ###############################################################################
+
+def questionsByTag(tag):
+      tag = tag.upper()
+      data=[]
+      index = get_total_questions_count()
+      
+      for i in range(index):
+            question_no = 'question'+str(i+1)
+            qdata = db.collection('questions').document(question_no).get()
+            qdata = qdata.to_dict()
+            qtags = qdata['tags']
+            # print(qtags)
+            count = qtags.count(tag)
+            if(count>0):
+                  data.append(qdata)      
+      
+      return data
+      
+# print(questionsByTag('Cp'))
 ###############################################################################
 
             
