@@ -354,11 +354,11 @@ def get_all_tags():
       for tag in tags.keys():
             dict={
                   'tag':tag,
-                  'questions':tags[tag]
+                  'number_of_questions':tags[tag]
             }
             my_list.append(dict)
             
-      my_list = sorted(my_list, key=lambda k: k['questions'], reverse=True)
+      my_list = sorted(my_list, key=lambda k: k['number_of_questions'], reverse=True)
       return my_list
       
 # print(get_all_tags())
