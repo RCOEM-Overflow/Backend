@@ -97,11 +97,16 @@ def get_unanswered_questions():
 
 ###############################################################################
 
-def checkUser(username, password,question,tags,anonymous):
+def checkUserForAddQuestion(email, password,question,tags,anonymous):
       try:
+            user = db.collection("users").where('email', '==', email).get()
+            username = user[0].id
+
             user = db.collection('users').document(username).get()
             getuser=user.to_dict()
+
             pas=getuser['password']
+
             if(pas==password):
                   author=getuser['name']
                   add_question_db(question,author,tags,anonymous)
@@ -130,7 +135,7 @@ def add_question_db(question, author, tags, anonymous):
       
       try:
             tags = tags.upper()
-            tags = tags.split(" ");
+            tags = tags.split(",");
             
             if(question.endswith('?')==False):
                   print("not")
@@ -431,7 +436,7 @@ def get_top_5_contributors():
             my_list.append(dict)   
       
       my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
-      
+      my_list = my_list[0:5]
       return my_list
 
 ###############################################################################

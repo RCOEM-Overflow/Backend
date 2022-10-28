@@ -249,11 +249,11 @@ def view_unanswered_questions(request):
 def add_question(request):
     """
     {
-            "username": "demouser1",
+            "email": "demouser1@gmail.com",
             "password":"pswd_1",
-            "anonymous": False,
-            "question":"How to become 5 star on codechef",
-            "tags":"competitive-programming cp dsa"
+            "anonymous": "False",
+            "question":"How to become 7 star on codechef",
+            "tags":"competitive-programming,cp,dsa"
     }
     """
     serializer = AddQuestionSerializer(data=request.data)
@@ -261,13 +261,15 @@ def add_question(request):
     if serializer.is_valid():
         
         data = serializer.data
-        question = data['question']
-        username = data['username']
+        
+        email = data['email']
         password = data['password']
+        question = data['question']
         tags = data['tags']
         anonymous = data['anonymous']
         
-        check = checkUser(username, password,question,tags,anonymous)
+        check = checkUserForAddQuestion(email, password,question,tags,anonymous)
+        
         if(check == True):
             return Response("Question added successfully")
         else:

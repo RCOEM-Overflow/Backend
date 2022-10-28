@@ -55,7 +55,7 @@ class UserLoginSerializer(serializers.Serializer):
 ###############################################################################
 
 class AddQuestionSerializer(serializers.Serializer):
-    username= serializers.CharField(max_length=1000)
+    email= serializers.EmailField()
     password= serializers.CharField(max_length=1000)
     anonymous= serializers.BooleanField()
     question= serializers.CharField(max_length=1000)
@@ -64,7 +64,7 @@ class AddQuestionSerializer(serializers.Serializer):
 ###############################################################################
 
 class AddAnswerSerializer(serializers.Serializer):
-    username= serializers.CharField(max_length=100)
+    email= serializers.EmailField()
     password= serializers.CharField(max_length=100)
     question= serializers.CharField(max_length=100000000)
     answer= serializers.CharField(max_length=10000000000)
