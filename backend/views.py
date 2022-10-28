@@ -33,7 +33,21 @@ def register(request):
             'user_name': data['user_name'],
             'email': data['email'],
             'password': data['password'],
-            'contributor': 0
+            'contributor': 0,
+            'college': "",
+            'semester': "",
+            'branch': "",
+            'skills': "",
+            'points': 0,
+            'contributor': 1,
+            'linkedin_url': "",
+            'github_url': "",
+            'codechef_url': "",
+            'codeforces_url': "",
+            'leetcode_url': "",
+            'other_url': "",
+            'company': "",
+            'position': ""
         }
 
         email = data['email']
