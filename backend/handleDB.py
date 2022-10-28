@@ -331,9 +331,14 @@ def verify_login_by_email(email,password):
 def add_authentication_user_data(email,user_data):
       try:
             user_id = email.split("@")[0]
-            db.collection('users').document(user_id).update(user_data)
+            print(user_id)
+            print(user_data)
+            user = db.collection('users').document(user_id)
+            user.update(user_data)
+            print(1)
             return 1
       except:
+            print(0)
             return 0
 ###############################################################################
 

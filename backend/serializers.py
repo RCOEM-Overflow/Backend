@@ -29,12 +29,19 @@ class UpdatePasswordSerializer(serializers.Serializer):
 ###############################################################################
 
 class AuthenticateSerializer(serializers.Serializer):
-    email = serializers.EmailField(max_length = 100, allow_blank=True)
+    email = serializers.EmailField(max_length = 100)
     college = serializers.CharField(max_length=100)
-    year = serializers.CharField(max_length=100)
+    semester = serializers.CharField(max_length=100)
     branch = serializers.CharField(max_length=100)
-    profile_url = serializers.URLField(max_length=100)
+    linkedin_url = serializers.URLField(max_length=1000)
+    github_url = serializers.URLField(max_length=1000)
+    codechef_url = serializers.URLField(max_length=1000,allow_blank=True)
+    codeforces_url = serializers.URLField(max_length=1000,allow_blank=True)
+    leetcode_url = serializers.URLField(max_length=1000,allow_blank=True)
+    other_url = serializers.URLField(max_length=1000,allow_blank=True)
     skills = serializers.CharField(max_length=5000)
+    company = serializers.CharField(max_length=5000,allow_blank=True)
+    position = serializers.CharField(max_length=5000,allow_blank=True)
 
 ###############################################################################
 

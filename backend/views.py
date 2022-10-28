@@ -70,7 +70,7 @@ def login(request):
     """
     {
         "email": "demouser1@gmail.com",
-        "password": "pswd_1"
+        "password": "pass"
     }
     """
     serializer = LoginSerializer(data=request.data)
@@ -91,7 +91,7 @@ def login(request):
                 return Response("LOGGED IN SUCCESSFULLY", status=status.HTTP_200_OK)
             else:
                 print("INVALID PASSWORD")
-                return Response("Invalid Password !! \nPlease Try Again", status=status.HTTP_401_UNAUTHORIZED)
+                return Response("Invalid Password !! Please Try Again", status=status.HTTP_401_UNAUTHORIZED)
 
         elif(check_email_exist(email) == -1):
             print("Cant verify email (-1)")
@@ -99,7 +99,7 @@ def login(request):
 
         else:
             print("EMAIL DOES NOT EXIST")
-            return Response("EMAIL DOES NOT EXIST", status=status.HTTP_404_NOT_FOUND)
+            return Response("PLEASE REGISTER", status=status.HTTP_404_NOT_FOUND)
 
     else:
         return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
@@ -114,9 +114,16 @@ def register_contributor(request):
     {
         "email": "demouser1@gmail.com",
         "college": "RCOEM",
-        "year": 2,
-        "branch" : "CSE",
-        "profile_url" : "https://www.demouser1.com",
+        "semester": "2nd",
+        "branch" : "CSE A",
+        "linkedin_url" : "https://www.demouser1.com",
+        "github_url" : "https://www.github.demouser1.com",
+        "codechef_url" : "https://www.codechef.demouser1.com",
+        "codeforces_url" : "https://www.codeforces.demouser1.com",
+        "leetcode_url" : "https://www.leetcode.demouser1.com",
+        "other_url" : "https://www.demouser1.com",
+        "company" : "",
+        "position" : "",
         "skills": "C++,C,JAVA,demouser1"
     }
     """
@@ -127,22 +134,36 @@ def register_contributor(request):
 
         email = data['email']
         college = data['college']
-        year = data['year']
+        semester = data['semester']
         branch = data['branch']
-        profile_url = data['profile_url']
         skills_str = data['skills']
+        linkedin_url = data['linkedin_url']
+        github_url = data['github_url']
+        codechef_url = data['codechef_url']
+        codeforces_url = data['codeforces_url']
+        leetcode_url = data['leetcode_url']
+        other_url = data['other_url']
+        company = data['company']
+        position = data['position']
 
         points = 0
         skills = covert_string_to_skills_list(skills_str)
 
         user_data = {
             'college': college,
-            'year': year,
+            'semester': semester,
             'branch': branch,
-            'profile_url': profile_url,
             'skills': skills,
             'points': points,
-            'contributor': 1
+            'contributor': 1,
+            'linkedin_url': linkedin_url,
+            'github_url': github_url,
+            'codechef_url': codechef_url,
+            'codeforces_url': codeforces_url,
+            'leetcode_url': leetcode_url,
+            'other_url': other_url,
+            'company': company,
+            'position': position
         }
 
         if (check_email_exist(email) == 0):
