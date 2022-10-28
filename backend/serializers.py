@@ -57,6 +57,7 @@ class UserLoginSerializer(serializers.Serializer):
 class AddQuestionSerializer(serializers.Serializer):
     username= serializers.CharField(max_length=1000)
     password= serializers.CharField(max_length=1000)
+    anonymous= serializers.BooleanField()
     question= serializers.CharField(max_length=1000)
     tags= serializers.CharField(max_length=1000)
     

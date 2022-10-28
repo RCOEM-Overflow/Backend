@@ -251,6 +251,7 @@ def add_question(request):
     {
             "username": "demouser1",
             "password":"pswd_1",
+            "anonymous": False,
             "question":"How to become 5 star on codechef",
             "tags":"competitive-programming cp dsa"
     }
@@ -264,8 +265,9 @@ def add_question(request):
         username = data['username']
         password = data['password']
         tags = data['tags']
+        anonymous = data['anonymous']
         
-        check = checkUser(username, password,question,tags)
+        check = checkUser(username, password,question,tags,anonymous)
         if(check == True):
             return Response("Question added successfully")
         else:
@@ -427,11 +429,16 @@ def tagwise_question(request):
     }
     """
     try:
-        serializer = SpecificTagSerializer(data=request.data)
         
+        print(1)
+        serializer = SpecificTagSerializer(data=request.data)
+        print(2)
         if serializer.is_valid():
+            print(3)
             tag = serializer.data['tag']
+            print(4)
             data = questionsByTag(tag)  
+            print(5)
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)

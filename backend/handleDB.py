@@ -33,6 +33,8 @@ def get_all_questions():
                   returnmap['views'] = data['views']
                   returnmap['upvotes'] = data['upvotes']
                   returnmap['question'] = data['question']
+                  returnmap['tags'] = data['tags']
+                  returnmap['anonymous'] = data['anonymous']
                   
                   if(data['anonymous']==True):
                         returnmap['author'] = "Anonymous"
@@ -83,6 +85,8 @@ def get_unanswered_questions():
             if(answerlen == 0):
                   returnmap['author'] = data['author']
                   returnmap['question'] = data['question']
+                  returnmap['tags'] = data['tags']
+                  returnmap['anonymous'] = data['anonymous']
                   
                   if(data['anonymous']==True):
                         returnmap['author'] = "Anonymous"
@@ -93,14 +97,14 @@ def get_unanswered_questions():
 
 ###############################################################################
 
-def checkUser(username, password,question,tags):
+def checkUser(username, password,question,tags,anonymous):
       try:
             user = db.collection('users').document(username).get()
             getuser=user.to_dict()
             pas=getuser['password']
             if(pas==password):
                   author=getuser['name']
-                  add_question_db(question,author,tags)
+                  add_question_db(question,author,tags,anonymous)
                   return True
             else :
                   return False
@@ -122,7 +126,7 @@ def checkUser2(username, password,question,answer):
             return False
 ###############################################################################
 
-def add_question_db(question, author, tags):
+def add_question_db(question, author, tags, anonymous):
       
       try:
             tags = tags.upper()
@@ -138,7 +142,8 @@ def add_question_db(question, author, tags):
                   'upvotes': 0,
                   'views': 0,
                   'author': author,
-                  'tags': tags
+                  'tags': tags,
+                  'anonymous': anonymous
             }
             
             index = get_total_questions_count()
@@ -486,7 +491,9 @@ def upvote_ans(question, answer):
             "author": data['author'],
             "question": data['question'],
             "upvotes": data['upvotes'],
-            "views": data['views']
+            "views": data['views'],
+            "tags": data['tags'],
+            "anonymous": data['anonymous']
       }
       
       index=0
@@ -527,7 +534,8 @@ def updatePassword(email,newpassword):
 ###############################################################################
 
 # def update_questions_data_manually():
-#      index = get_total_questions_count()
+#       index = get_total_questions_count()
+#       index = 10
       
 #       for i in range(index):
 #             question_no = 'question'+str(i+1)
@@ -536,12 +544,10 @@ def updatePassword(email,newpassword):
 #                   'anonymous': False,
 #                   'views':100,
 #                   'upvotes':20,
-#                   'tags':['HTML','CSS','JAVA']
+#                   'tags':['HTML','CSS','JAVASCRIPT']
 #             })
             
 #       return "Questions data updated manually"
-
-# print(update_questions_data_manually())
 
 ###############################################################################
 
