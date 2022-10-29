@@ -471,20 +471,24 @@ def total_views_count(request):
 def upvote_question(request):
     """
     {
-            "question":"Hello World !! Kush here :)"
+            "question":"How to become 6 star on codechef?"
     }
     """
     try:
         serializer = UpvoteQuestionSerializer(data=request.data)
+        
         if serializer.is_valid():
-            question = serializer.data['question']
+            
+            data = serializer.data
+            question = data['question']
             
             upvote_que(question)
+            
             return Response(status=status.HTTP_200_OK)
         else:   
             return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
     except:
-        return Response("ERROR", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Failed to Upvote", status=status.HTTP_400_BAD_REQUEST)
 
 ###############################################################################
 
@@ -492,16 +496,17 @@ def upvote_question(request):
 def upvote_answer(request):
     """
     {
-        "question":"Hello World !! Kush here :)",
-        "answer":"answer 111"
+        "question":"How to become 6 star on codechef?",
+        "answer":"Youtube"
     }
     """
     try:
         serializer = UpvoteAnswerSerializer(data=request.data)
         
         if serializer.is_valid():
-            question = serializer.data['question']
-            answer = serializer.data['answer']
+            data = serializer.data
+            question = data['question']
+            answer = data['answer']
             # print(question)
             # print(answer)
             upvote_ans(question, answer)  
@@ -509,14 +514,18 @@ def upvote_answer(request):
         else:
             return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
     except:
-        return Response("ERROR", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Failed to Upvote", status=status.HTTP_400_BAD_REQUEST)
         
 ###############################################################################
 
 @api_view(['GET'])
 def all_tags(request):
-    data=get_all_tags()
-    return Response(data, status=status.HTTP_200_OK)   
+    try:
+        data=get_all_tags()
+        return Response(data, status=status.HTTP_200_OK)       
+    except:
+        return Response({},status=status.HTTP_400_BAD_REQUEST) 
+
 
 ###############################################################################
 
@@ -524,24 +533,23 @@ def all_tags(request):
 def tagwise_question(request):
     """
     {
-        "tag":"cp"
+        "tag":"html"
     }
     """
     try:
-        
-        print(1)
         serializer = SpecificTagSerializer(data=request.data)
-        print(2)
+        
         if serializer.is_valid():
-            print(3)
-            tag = serializer.data['tag']
-            print(4)
-            data = questionsByTag(tag)  
-            print(5)
+            
+            data = serializer.data
+            tag = data['tag']
+            
+            data = questionsByTag(tag) 
+
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
     except:
-        return Response("ERROR IN QUESTIONS BY TAG", status=status.HTTP_400_BAD_REQUEST) 
+        return Response("FAILED TO FETCH QUESTIONS BY TAG", status=status.HTTP_400_BAD_REQUEST) 
 
 ###############################################################################

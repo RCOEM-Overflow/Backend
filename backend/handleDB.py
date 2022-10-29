@@ -381,8 +381,8 @@ def covert_string_to_skills_list(skills_str):
 def get_all_tags():
       
       my_list=[]
-      tags = db.collection("tags").get()
-      tags=tags[0].to_dict()
+      tags = db.collection('tags').get()
+      tags = tags[0].to_dict()
       
       for tag in tags.keys():
             dict={
@@ -489,18 +489,19 @@ def check_valid_email(email):
 ###############################################################################
 
 def upvote_que(question):
-      print(question)
+      # print(question)
       qdata = db.collection('questions').where("question", "==", question).get()
       quenum = qdata[0].id
       data = db.collection("questions").document(quenum)
       data.update({"upvotes": firestore.Increment(1)})
+      
+      data = db.collection('questions').document(quenum)
+      data.update({'views': firestore.Increment(1)})
             
 
 ###############################################################################
 
 def upvote_ans(question, answer):
-      # print(question)
-      # print(answer)
       qdata = db.collection('questions').where("question", "==", question).get()
       quenum = qdata[0].id
       data = qdata[0].to_dict()
@@ -568,25 +569,42 @@ def updatePassword(email,newpassword):
             
 #       return "Questions data updated manually"
 
+# ###############################################################################
+
+# def questionsByTag(tag):
+#       tag = tag.upper()
+#       data=[]
+#       index = get_total_questions_count()
+      
+#       for i in range(index):
+#             question_no = 'question'+str(i+1)
+#             qdata = db.collection('questions').document(question_no).get()
+#             qdata = qdata.to_dict()
+#             qtags = qdata['tags']
+#             # print(qtags)
+#             count = qtags.count(tag)
+#             if(count>0):
+#                   data.append(qdata)      
+      
+#       return data
 ###############################################################################
 
 def questionsByTag(tag):
       tag = tag.upper()
-      data=[]
-      index = get_total_questions_count()
+      que_list=[]
       
-      for i in range(index):
-            question_no = 'question'+str(i+1)
-            qdata = db.collection('questions').document(question_no).get()
-            qdata = qdata.to_dict()
+      data = db.collection('questions').get()
+      for que in data:
+            qdata = que.to_dict()
             qtags = qdata['tags']
             # print(qtags)
             count = qtags.count(tag)
             if(count>0):
-                  data.append(qdata)      
-      
-      return data
-      
+                  que_list.append(qdata)
+            
+      que_list = sorted(que_list, key=lambda k: k['views'], reverse=True)
+      return que_list
+
 ###############################################################################
 
 def updatePoints(email,increase):
