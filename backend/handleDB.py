@@ -19,7 +19,7 @@ def check():
 def get_all_questions():
       index = get_total_questions_count()
       returndata = []
-      print(index)
+      # print(index)
 
       for i in range(index):
             returnmap = {}

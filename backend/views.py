@@ -213,7 +213,7 @@ def register_contributor(request):
 def update_password(request):
     """
     {
-        "email": "demouser4@gmail.com",
+        "email": "demouser2@gmail.com",
         "password": "updated_password"
     }
     """
@@ -278,9 +278,12 @@ def view_search_questions(request):
 
 @api_view(['GET'])
 def view_trending_questions(request):
+    try:
+        data = get_trending_questions()
+        return Response(data, status=status.HTTP_200_OK)
+    except:
+        return Response("PLEASE TRY AGAIN", status=status.HTTP_400_BAD_REQUEST)
 
-    data = get_trending_questions()
-    return Response(data)
 
 ###############################################################################
 
