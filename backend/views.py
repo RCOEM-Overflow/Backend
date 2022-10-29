@@ -17,9 +17,9 @@ def register(request):
     """
     {
         "name": "Demo User 1",
-        "user_name": "demouser1",
+        "user_name": "noob1",
         "email": "demouser1@gmail.com",
-        "password": "pswd_1"
+        "password": "pass"
     }
     """
     serializer = RegisterSerializer(data=request.data)
@@ -33,13 +33,12 @@ def register(request):
             'user_name': data['user_name'],
             'email': data['email'],
             'password': data['password'],
-            'contributor': 0,
+            'contributor': False,
             'college': "",
             'semester': "",
             'branch': "",
             'skills': "",
             'points': 0,
-            'contributor': 1,
             'linkedin_url': "",
             'github_url': "",
             'codechef_url': "",
@@ -53,10 +52,8 @@ def register(request):
         email = data['email']
         user_name = data['user_name']
 
-        if(check_valid_email(email)==0):
-            return Response("INVALID EMAIL", status=status.HTTP_406_NOT_ACCEPTABLE)
-        
-        elif (check_email_exist(email) != 0):
+
+        if (check_email_exist(email) != 0):
             print("EMAIL ALREADY EXIST")
             return Response("EMAIL ALREADY EXIST", status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -66,8 +63,12 @@ def register(request):
 
         elif((check_email_exist(email) == 0) and (check_username_exist(user_name) == 0)):
             print("NEW USER FOUND")
-            create_user(email, user_data)
-            return Response("REGISTERED SUCCESSFULLY", status=status.HTTP_201_CREATED)
+            if(create_user(email, user_data)==1):
+                return Response("REGISTERED SUCCESSFULLY", status=status.HTTP_201_CREATED)
+            else:
+                print("ERROR IN CREATING USER, TRY AGAIN")
+                return Response("ERROR IN CREATING USER, TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
+
         else:
             print("ERROR IN REGISTERING, TRY AGAIN")
             return Response("ERROR IN REGISTERING, TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
@@ -97,17 +98,23 @@ def login(request):
 
         # print(email)
         # print(password)
+        
+        doexist = check_email_exist(email)
 
-        if(check_email_exist(email) == 1):
+        if(doexist == 1):
 
             if(verify_login_by_email(email, password) == 1):
                 print("LOGGED IN SUCCESFULLY")
-                return Response("LOGGED IN SUCCESSFULLY", status=status.HTTP_200_OK)
+                isContributor = is_contributor(email)
+                data = {
+                    'contributor':isContributor
+                }
+                return Response(data, status=status.HTTP_200_OK)
             else:
                 print("INVALID PASSWORD")
                 return Response("Invalid Password !! Please Try Again", status=status.HTTP_401_UNAUTHORIZED)
 
-        elif(check_email_exist(email) == -1):
+        elif(doexist == -1):
             print("Cant verify email (-1)")
             return Response("PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
 
@@ -130,6 +137,7 @@ def register_contributor(request):
         "college": "RCOEM",
         "semester": "2nd",
         "branch" : "CSE A",
+        "skills": "C++,C,Java,Python",
         "linkedin_url" : "https://www.demouser1.com",
         "github_url" : "https://www.github.demouser1.com",
         "codechef_url" : "https://www.codechef.demouser1.com",
@@ -137,11 +145,10 @@ def register_contributor(request):
         "leetcode_url" : "https://www.leetcode.demouser1.com",
         "other_url" : "https://www.demouser1.com",
         "company" : "",
-        "position" : "",
-        "skills": "C++,C,JAVA,demouser1"
+        "position" : ""
     }
     """
-    serializer = AuthenticateSerializer(data=request.data)
+    serializer = ContributorSerializer(data=request.data)
 
     if serializer.is_valid():
         data = serializer.data
@@ -160,16 +167,15 @@ def register_contributor(request):
         company = data['company']
         position = data['position']
 
-        points = 0
         skills = covert_string_to_skills_list(skills_str)
 
         user_data = {
+            'contributor': True,
             'college': college,
             'semester': semester,
             'branch': branch,
             'skills': skills,
-            'points': points,
-            'contributor': 1,
+            'points': 0,
             'linkedin_url': linkedin_url,
             'github_url': github_url,
             'codechef_url': codechef_url,
@@ -179,17 +185,18 @@ def register_contributor(request):
             'company': company,
             'position': position
         }
+        
+        doexist = check_email_exist(email)
 
-        if (check_email_exist(email) == 0):
+        if (doexist == 0):
             print("NO USER FOUND")
             return Response("NO USER FOUND", status=status.HTTP_404_NOT_FOUND)
 
-        elif (check_email_exist(email) == -1):
+        elif (doexist == -1):
             print("ERROR")
             return Response("PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
 
-        elif (check_email_exist(email) == 1):
-
+        elif (doexist == 1):
             print("USER FOUND")
 
             if(add_authentication_user_data(email, user_data) == 1):

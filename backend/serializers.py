@@ -28,7 +28,7 @@ class UpdatePasswordSerializer(serializers.Serializer):
 
 ###############################################################################
 
-class AuthenticateSerializer(serializers.Serializer):
+class ContributorSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length = 100)
     college = serializers.CharField(max_length=100)
     semester = serializers.CharField(max_length=100)

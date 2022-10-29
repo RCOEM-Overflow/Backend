@@ -236,8 +236,7 @@ def get_trending_questions():
 def check_email_exist(email):
       
       try:
-            user_id = email.split("@")[0]
-            user = db.collection('users').document(user_id).get()
+            user = db.collection('users').document(email).get()
             if(user.exists):
                   return 1
             else:
@@ -265,11 +264,7 @@ def check_username_exist(user_name):
 def create_user(email,data):
       
       try:
-            user_id = email.split("@")[0]
-            db.collection('users').document(user_id).set(data)
-            
-            index=db.collection('index').document('index')
-            index.update({"total_users": firestore.Increment(1)})
+            db.collection('users').document(email).set(data)
             
             return 1
       except:
@@ -280,7 +275,7 @@ def create_user(email,data):
 
 def get_user_data(email):
       try:
-            users = db.collection("users").where('email', '==', email).get()
+            users = db.collection('users').document(email).get()
 
             if len(users) > 0:
                   userdata = users[0].to_dict()
@@ -311,12 +306,8 @@ def verify_login_by_username(user_name,password):
 
 def verify_login_by_email(email,password):
       try:
-            user_id = email.split("@")[0]
-            # print("1")
-            user = db.collection('users').document(user_id).get()
+            user = db.collection('users').document(email).get()
             userdata=user.to_dict()   
-            # print("2")
-            print(userdata)         
             
             if(password == userdata['password']):
                   return 1
@@ -326,12 +317,25 @@ def verify_login_by_email(email,password):
             print("ERROR IN VERIFY_LOGIN_BY_EMAIL")
             return -1
       
+
+###############################################################################
+
+def is_contributor(email):
+      try:
+            user = db.collection('users').document(email).get()
+            userdata=user.to_dict() 
+            
+            isContributor = userdata['contributor']       
+            return isContributor
+      except:
+            print("ERROR IN VERIFY_LOGIN_BY_EMAIL")
+            return -1
+      
 ###############################################################################
 
 def add_authentication_user_data(email,user_data):
       try:
-            user_id = email.split("@")[0]
-            user = db.collection('users').document(user_id)
+            user = db.collection('users').document(email)
             user.update(user_data)
             return 1
       except:
@@ -527,9 +531,8 @@ def get_total_questions_count():
 
 def updatePassword(email,newpassword):
       try:
-            user = db.collection("users").where('email', '==', email).get()
-            username = user[0].id
-            user = db.collection("users").document(username)
+            user_id = email.split("@")[0]
+            user = db.collection('users').document(user_id)
             user.update({
                   'password': newpassword
             })
