@@ -208,6 +208,12 @@ def get_specific_question(question):
             if(data['anonymous']==True):
                   data['author'] = "Anonymous"
             
+            answerlist = data['answers']
+            
+            answerlist = sorted(answerlist, key=lambda k: k['upvotes'], reverse=True)
+            
+            data['answers'] =  answerlist
+            
             return data
       else:
             return "Question Not Found"
@@ -600,7 +606,16 @@ def questionsByTag(tag):
             # print(qtags)
             count = qtags.count(tag)
             if(count>0):
-                  que_list.append(qdata)
+                  returnmap = {}
+                  returnmap['author'] = qdata['author']
+                  returnmap['views'] = qdata['views']
+                  returnmap['upvotes'] = qdata['upvotes']
+                  returnmap['question'] = qdata['question']
+                  
+                  if(qdata['anonymous']==True):
+                        returnmap['author'] = "Anonymous"
+                        
+                  que_list.append(returnmap)
             
       que_list = sorted(que_list, key=lambda k: k['views'], reverse=True)
       return que_list
