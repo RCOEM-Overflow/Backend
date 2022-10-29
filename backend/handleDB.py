@@ -19,27 +19,30 @@ def check():
 def get_all_questions():
       index = get_total_questions_count()
       returndata = []
+      print(index)
 
       for i in range(index):
             returnmap = {}
             question_no = 'question'+str(i+1)
             data = db.collection('questions').document(question_no).get()
-            data = data.to_dict()
-            answerlen = len(data['answers'])
-            #print(data['answers'])
-            if(answerlen > 0):
-                  returnmap['author'] = data['author']
-                  returnmap['no_of_answers'] = answerlen
-                  returnmap['views'] = data['views']
-                  returnmap['upvotes'] = data['upvotes']
-                  returnmap['question'] = data['question']
-                  returnmap['tags'] = data['tags']
-                  returnmap['anonymous'] = data['anonymous']
-                  
-                  if(data['anonymous']==True):
-                        returnmap['author'] = "Anonymous"
+            if(data.exists):
+                  data = data.to_dict()
+                  answerlen = len(data['answers'])
+                  # print(data['answers'])
+                  print(i)
+                  if(answerlen > 0):
+                        returnmap['author'] = data['author']
+                        returnmap['no_of_answers'] = answerlen
+                        returnmap['views'] = data['views']
+                        returnmap['upvotes'] = data['upvotes']
+                        returnmap['question'] = data['question']
+                        returnmap['tags'] = data['tags']
+                        returnmap['anonymous'] = data['anonymous']
                         
-                  returndata.append(returnmap)
+                        if(data['anonymous']==True):
+                              returnmap['author'] = "Anonymous"
+                              
+                        returndata.append(returnmap)
 
       returndata.reverse()
       return returndata
@@ -54,19 +57,20 @@ def get_search_questions():
             returnmap = {}
             question_no = 'question'+str(i+1)
             data = db.collection('questions').document(question_no).get()
-            data = data.to_dict()
-            answerlen = len(data['answers'])
-            if(answerlen > 0):
-                  returnmap['question'] = data['question']
-                  question=data['question']
-                  linkstr="http://localhost:3000/answers/"
-                  for element in question:
-                        if(element==' '):
-                              linkstr+="%20"
-                        else:
-                              linkstr+=element
-                  returnmap['link']=linkstr
-                  returndata.append(returnmap)
+            if(data.exists):
+                  data = data.to_dict()
+                  answerlen = len(data['answers'])
+                  if(answerlen > 0):
+                        returnmap['question'] = data['question']
+                        question=data['question']
+                        linkstr="http://localhost:3000/answers/"
+                        for element in question:
+                              if(element==' '):
+                                    linkstr+="%20"
+                              else:
+                                    linkstr+=element
+                        returnmap['link']=linkstr
+                        returndata.append(returnmap)
 
       return returndata
 
@@ -80,18 +84,19 @@ def get_unanswered_questions():
             returnmap = {}
             question_no = 'question'+str(i+1)
             data = db.collection('questions').document(question_no).get()
-            data = data.to_dict()
-            answerlen = len(data['answers'])
-            if(answerlen == 0):
-                  returnmap['author'] = data['author']
-                  returnmap['question'] = data['question']
-                  returnmap['tags'] = data['tags']
-                  returnmap['anonymous'] = data['anonymous']
-                  
-                  if(data['anonymous']==True):
-                        returnmap['author'] = "Anonymous"
+            if(data.exists):
+                  data = data.to_dict()
+                  answerlen = len(data['answers'])
+                  if(answerlen == 0):
+                        returnmap['author'] = data['author']
+                        returnmap['question'] = data['question']
+                        returnmap['tags'] = data['tags']
+                        returnmap['anonymous'] = data['anonymous']
                         
-                  returndata.append(returnmap)
+                        if(data['anonymous']==True):
+                              returnmap['author'] = "Anonymous"
+                              
+                        returndata.append(returnmap)
 
       return returndata
 
@@ -119,13 +124,15 @@ def checkUserForAddQuestion(email, password,question,tags,anonymous):
 
 ###############################################################################
 
-def checkUser2(username, password,question,answer):
-      user = db.collection('users').document(username).get()
-      getuser=user.to_dict()
-      pas=getuser['password']
+def checkUser2(email, password, question, answer):
+      user = db.collection('users').document(email).get()
+      getuser = user.to_dict()
+      
+      pas = getuser['password']
+      
       if(pas==password):
-            author=getuser['name']
-            add_answer_db(question,author,answer)
+            author = getuser['user_name']
+            add_answer_db(question, author, answer)
             return True
       else :
             return False
@@ -164,10 +171,10 @@ def add_question_db(question, author, tags, anonymous):
 
 def add_answer_db(question, author, answer):
       qdata = db.collection('questions').where("question", "==", question).get()
-      for doc in qdata:
-            key = doc.id
-            break
+      key = qdata[0].id
+
       qdata = qdata[0].to_dict()
+      
       answer_array = qdata['answers']
 
       data = {
@@ -176,6 +183,7 @@ def add_answer_db(question, author, answer):
             'upvotes': 0,
             'comments': [],
       }
+      
       answer_array.append(data)
       db.collection('questions').document(key).update({"answers": answer_array})
 
@@ -183,17 +191,20 @@ def add_answer_db(question, author, answer):
 
 def get_specific_question(question):
       qdata = db.collection('questions').where("question", "==", question).get()
-      quenum = qdata[0].id
+      if(len(qdata) != 0):
+            quenum = qdata[0].id
+            
+            data = db.collection('questions').document(quenum)
+            data.update({'views': firestore.Increment(1)})
+            
+            data = data.get().to_dict()
+            
+            if(data['anonymous']==True):
+                  data['author'] = "Anonymous"
+            
+            return data
       
-      data = db.collection('questions').document(quenum)
-      data.update({'views': firestore.Increment(1)})
-      
-      data = data.get().to_dict()
-      
-      if(data['anonymous']==True):
-            data['author'] = "Anonymous"
-      
-      return data
+      return "Question Not Found"
 
 ###############################################################################
 
@@ -204,10 +215,11 @@ def get_trending_questions():
       for i in range(index):
             question_no = 'question'+str(i+1)
             data = db.collection('questions').document(question_no).get()
-            data = data.to_dict()
-            answerlen = len(data['answers'])
-            if(answerlen > 0):
-                  dic[(i+1)] = data['views']
+            if(data.exists):
+                  data = data.to_dict()
+                  answerlen = len(data['answers'])
+                  if(answerlen > 0):
+                        dic[(i+1)] = data['views']
 
       sorted_dict = {}
       sorted_keys = sorted(dic, key=dic.get)
@@ -531,8 +543,7 @@ def get_total_questions_count():
 
 def updatePassword(email,newpassword):
       try:
-            user_id = email.split("@")[0]
-            user = db.collection('users').document(user_id)
+            user = db.collection('users').document(email)
             user.update({
                   'password': newpassword
             })

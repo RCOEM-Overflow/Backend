@@ -227,8 +227,10 @@ def update_password(request):
 
         # print(email)
         # print(password)
+        
+        doexist = check_email_exist(email)
 
-        if(check_email_exist(email) == 1):
+        if(doexist == 1):
 
             if(updatePassword(email, password) == 1):
                 print("Password Updated Successfully")
@@ -237,7 +239,7 @@ def update_password(request):
                 print("Cant update Password")
                 return Response("FAILED TO UPDATE PASSWORD, PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
 
-        elif(check_email_exist(email) == -1):
+        elif(doexist == -1):
             print("Cant verify email (-1)")
             return Response("PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
 
@@ -254,17 +256,22 @@ def update_password(request):
 
 @api_view(['GET'])
 def view_all_questions(request):
-
-    data = get_all_questions()
-    return Response(data)
+    try:
+        data = get_all_questions()
+        return Response(data, status=status.HTTP_200_OK)
+    except:
+        return Response("PLEASE TRY AGAIN", status=status.HTTP_400_BAD_REQUEST)
 
 ###############################################################################
 
 @api_view(['GET'])
 def view_search_questions(request):
-
-    data = get_search_questions()
-    return Response(data)
+    try:
+        data = get_search_questions()
+        return Response(data, status=status.HTTP_200_OK)
+    except:
+        return Response("PLEASE TRY AGAIN", status=status.HTTP_400_BAD_REQUEST)
+    
 
 ###############################################################################
 
@@ -326,21 +333,25 @@ def add_question(request):
 def add_answer(request):
     """
     {
-            "username": "demouser1",
-            "password":"pswd_1",
-            "question":"How to be a full stack developer?",
-            "answer":"Follow angela yu web development course on udemy."
+            "email": "demouser1@gmail.com",
+            "password":"pass",
+            "question":"how to study for endsem?",
+            "answer":"Youtube"
     }
     """
     serializer = AddAnswerSerializer(data=request.data)
 
     if serializer.is_valid():
+        
         data = serializer.data
-        question = data['question']
-        username = data['username']
+        
+        email = data['email']
         password = data['password']
+        question = data['question']
         answer = data['answer']
-        check = checkUser2(username, password,question,answer)
+        
+        check = checkUser2(email, password, question, answer)
+        
         if(check == True):
             #add_answer_db(question, username, answer)
             return Response("Answer added successfully")
@@ -356,15 +367,16 @@ def add_answer(request):
 def view_specific_question(request):
     """
         {
-                "question":"How to start with competetive programming?"
+            "question":"How to start with competetive programming?"
         }
-        """
+    """
     serializer = ViewSpecificQuestionSerializer(data=request.data)
     if serializer.is_valid():
         question = serializer.data['question']
-    data = get_specific_question(question)
-    return Response(data)
-
+        data = get_specific_question(question)
+        return Response(data, status=status.HTTP_200_OK) 
+    else:
+        return Response("INVALID DATA", status=status.HTTP_400_BAD_REQUEST)
 
 
 ###############################################################################
