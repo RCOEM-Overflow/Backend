@@ -404,15 +404,12 @@ def get_all_users():
       users = db.collection("users").get()
 
       for user in users:
-            user_data=user.to_dict()
-            dict={
-                  'name':user_data['name'],
-                  'user_name':user_data['user_name'],
-                  'email':user_data['email'],
-                  'mobile':user_data['mobile'],
-            }
-            my_list.append(dict)    
+            user_data = user.to_dict()
+            user_data['password']="*****"
+            my_list.append(user_data)     
 
+      my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
+      
       return my_list
 
 ###############################################################################
@@ -420,23 +417,12 @@ def get_all_users():
 def get_all_contributors():
       
       my_list=[]
-      users = db.collection("users").where('contributor', u'==', 1).get()
+      users = db.collection("users").where('contributor', u'==', True).get()
 
       for user in users:
-            user_data=user.to_dict()
-            dict={
-                  'name':user_data['name'],
-                  'user_name':user_data['user_name'],
-                  'email':user_data['email'],
-                  'mobile':user_data['mobile'],
-                  'college':user_data['college'],
-                  'year':user_data['year'],
-                  'branch':user_data['branch'],
-                  'points':user_data['points'],
-                  'skills':user_data['skills'],
-                  'profile_url':user_data['profile_url']
-            }
-            my_list.append(dict)    
+            user_data = user.to_dict()
+            user_data['password']="*****"
+            my_list.append(user_data)    
       
       my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
 
@@ -447,13 +433,15 @@ def get_all_contributors():
 def get_top_5_contributors():
       my_list=[]
       
-      users = db.collection("users").where('contributor', u'==', 1).get()
+      users = db.collection("users").where('contributor', u'==', True).get()
 
       for user in users:
             user_data=user.to_dict()
 
             dict={
                   'name':user_data['name'],
+                  'user_name':user_data['user_name'],
+                  'college':user_data['college'],
                   'points':user_data['points']
             }
             my_list.append(dict)   
@@ -465,11 +453,8 @@ def get_top_5_contributors():
 ###############################################################################
 
 def get_total_users_count():
-      data = db.collection("index").document('index').get()
-      data=data.to_dict()
-      count=data['total_users']
-      return count
-      
+      data = db.collection('users').get()
+      return len(data)
       
 ###############################################################################
 

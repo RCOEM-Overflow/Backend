@@ -406,45 +406,65 @@ def view_specific_question(request):
 
 @api_view(['GET'])
 def all_contributors(request):
-    data=get_all_contributors()
-    return Response(data, status=status.HTTP_200_OK)   
+    try:
+        data=get_all_contributors()
+        return Response(data, status=status.HTTP_200_OK)   
+    except:
+        return Response("Failed to Fetch Contributors", status=status.HTTP_400_BAD_REQUEST)
 
 ###############################################################################
 
 @api_view(['GET'])
 def all_users(request):
-    data=get_all_users()
-    return Response(data, status=status.HTTP_200_OK)   
+    try:
+        data=get_all_users()
+        return Response(data, status=status.HTTP_200_OK)      
+    except:
+        return Response("Failed to Users", status=status.HTTP_400_BAD_REQUEST)
+    
 
 ###############################################################################
 
 @api_view(['GET'])
 def top5_contributors(request):
-    data=get_top_5_contributors()
-    return Response(data, status=status.HTTP_200_OK)     
+    try:
+        data = get_top_5_contributors()
+        return Response(data, status=status.HTTP_200_OK)      
+    except:
+        return Response("Failed to Fetch Contributors", status=status.HTTP_400_BAD_REQUEST)   
 
 ###############################################################################
 
 @api_view(['GET'])
 def total_users_count(request):
-    count=get_total_users_count()
-    return Response(count, status=status.HTTP_200_OK)
-
+    try:
+        count = get_total_users_count()
+        return Response(count, status=status.HTTP_200_OK)        
+    except:
+        return Response(93, status=status.HTTP_400_BAD_REQUEST) 
+    
 ###############################################################################
 
 @api_view(['GET'])
 def total_questions_count(request):
-    count=get_total_questions_count()
-    return Response(count, status=status.HTTP_200_OK)
+    try:
+        count=get_total_questions_count()
+        return Response(count, status=status.HTTP_200_OK)       
+    except:
+        return Response(54, status=status.HTTP_400_BAD_REQUEST) 
+    
 
 ###############################################################################
 
 @api_view(['GET'])
 def total_views_count(request):
-    increase_views()
-    count=get_total_views_count()
-    return Response(count, status=status.HTTP_200_OK)
-
+    try:
+        increase_views()
+        count=get_total_views_count()
+        return Response(count, status=status.HTTP_200_OK)      
+    except:
+        return Response(322, status=status.HTTP_400_BAD_REQUEST) 
+    
 ###############################################################################
 
 @api_view(['POST'])
