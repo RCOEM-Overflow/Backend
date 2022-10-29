@@ -290,9 +290,12 @@ def view_trending_questions(request):
 
 @api_view(['GET'])
 def view_unanswered_questions(request):
+    try:
+        data = get_unanswered_questions()
+        return Response(data, status=status.HTTP_200_OK)
+    except:
+        return Response("PLEASE TRY AGAIN", status=status.HTTP_400_BAD_REQUEST)
 
-    data = get_unanswered_questions()
-    return Response(data)
 
 ###############################################################################
 
@@ -302,33 +305,42 @@ def add_question(request):
     """
     {
             "email": "demouser1@gmail.com",
-            "password":"pswd_1",
+            "password":"pass",
             "anonymous": "False",
             "question":"How to become 7 star on codechef",
             "tags":"competitive-programming,cp,dsa"
     }
     """
-    serializer = AddQuestionSerializer(data=request.data)
+    
+    try:
+        serializer = AddQuestionSerializer(data=request.data)
 
-    if serializer.is_valid():
-        
-        data = serializer.data
-        
-        email = data['email']
-        password = data['password']
-        question = data['question']
-        tags = data['tags']
-        anonymous = data['anonymous']
-        
-        check = checkUserForAddQuestion(email, password,question,tags,anonymous)
-        
-        if(check == True):
-            return Response("Question added successfully")
+        if serializer.is_valid():
+            
+            data = serializer.data
+            
+            email = data['email']
+            password = data['password']
+            question = data['question']
+            tags = data['tags']
+            anonymous = data['anonymous']
+            
+            check = checkUserForAddQuestion(email, password,question,tags,anonymous)
+            
+            updated = updatePoints(email,2)
+            
+            if(updated==False):
+                return Response("Failed to Update Points", status=status.HTTP_403_FORBIDDEN)
+            
+            if(check == True):
+                return Response("Question added successfully", status=status.HTTP_200_OK)
+            else:
+                return Response("INVALID USER DATA", status=status.HTTP_403_FORBIDDEN)
         else:
-            return Response("INVALID USER DATA")
-    else:
-        return Response("INVALID DATA", status=status.HTTP_400_BAD_REQUEST)
-
+            return Response("INVALID DATA", status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response("PLEASE TRY AGAIN", status=status.HTTP_400_BAD_REQUEST)
+    
 ###############################################################################
 
 
@@ -338,7 +350,7 @@ def add_answer(request):
     {
             "email": "demouser1@gmail.com",
             "password":"pass",
-            "question":"how to study for endsem?",
+            "question":"How to become 6 star on codechef?",
             "answer":"Youtube"
     }
     """
@@ -355,8 +367,12 @@ def add_answer(request):
         
         check = checkUser2(email, password, question, answer)
         
+        updated = updatePoints(email,5)
+            
+        if(updated==False):
+            return Response("Failed to Update Points", status=status.HTTP_403_FORBIDDEN)
+        
         if(check == True):
-            #add_answer_db(question, username, answer)
             return Response("Answer added successfully")
         else:
             return Response("INVALID USER DATA")
@@ -370,13 +386,17 @@ def add_answer(request):
 def view_specific_question(request):
     """
         {
-            "question":"How to start with competetive programming?"
+            "question":"How to become 6 star on codechef?"
         }
     """
     serializer = ViewSpecificQuestionSerializer(data=request.data)
+    
     if serializer.is_valid():
-        question = serializer.data['question']
+        data = serializer.data
+        
+        question = data['question']
         data = get_specific_question(question)
+        
         return Response(data, status=status.HTTP_200_OK) 
     else:
         return Response("INVALID DATA", status=status.HTTP_400_BAD_REQUEST)

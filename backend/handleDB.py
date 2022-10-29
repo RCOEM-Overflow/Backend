@@ -18,6 +18,7 @@ def check():
 
 def get_all_questions():
       index = get_total_questions_count()
+      index = index + 5
       returndata = []
       # print(index)
 
@@ -51,6 +52,7 @@ def get_all_questions():
 
 def get_search_questions():
       index = get_total_questions_count()
+      index = index + 5
       returndata = []
 
       for i in range(index):
@@ -63,7 +65,8 @@ def get_search_questions():
                   if(answerlen > 0):
                         returnmap['question'] = data['question']
                         question=data['question']
-                        linkstr="http://localhost:3000/answers/"
+                        # linkstr="http://localhost:3000/answers/"
+                        linkstr="https://rcoem-overflow.netlify.app/answers/"
                         for element in question:
                               if(element==' '):
                                     linkstr+="%20"
@@ -78,6 +81,7 @@ def get_search_questions():
 
 def get_unanswered_questions():
       index = get_total_questions_count()
+      index = index + 5
       returndata = []
 
       for i in range(index):
@@ -104,16 +108,12 @@ def get_unanswered_questions():
 
 def checkUserForAddQuestion(email, password,question,tags,anonymous):
       try:
-            user = db.collection("users").where('email', '==', email).get()
-            username = user[0].id
+            user = db.collection('users').document(email).get()
+            user = user.to_dict()
+            pas = user['password']
 
-            user = db.collection('users').document(username).get()
-            getuser=user.to_dict()
-
-            pas=getuser['password']
-
-            if(pas==password):
-                  author=getuser['name']
+            if(pas == password):
+                  author = user['user_name']
                   add_question_db(question,author,tags,anonymous)
                   return True
             else :
@@ -125,16 +125,20 @@ def checkUserForAddQuestion(email, password,question,tags,anonymous):
 ###############################################################################
 
 def checkUser2(email, password, question, answer):
-      user = db.collection('users').document(email).get()
-      getuser = user.to_dict()
-      
-      pas = getuser['password']
-      
-      if(pas==password):
-            author = getuser['user_name']
-            add_answer_db(question, author, answer)
-            return True
-      else :
+      try:
+            user = db.collection('users').document(email).get()
+            getuser = user.to_dict()
+            
+            pas = getuser['password']
+            
+            if(pas==password):
+                  author = getuser['user_name']
+                  add_answer_db(question, author, answer)
+                  return True
+            else :
+                  return False
+      except:
+            print("Error in checkUser2")
             return False
 ###############################################################################
 
@@ -145,7 +149,7 @@ def add_question_db(question, author, tags, anonymous):
             tags = tags.split(",");
             
             if(question.endswith('?')==False):
-                  print("not")
+                  # print("not")
                   question = question + "?"
                   
             data = {
@@ -162,6 +166,7 @@ def add_question_db(question, author, tags, anonymous):
             index = index+1
             question_no = 'question'+str(index)
             db.collection('questions').document(question_no).set(data)
+            increase_questions_views()
             
       except:
             print("Error in add_question_db")
@@ -197,14 +202,15 @@ def get_specific_question(question):
             data = db.collection('questions').document(quenum)
             data.update({'views': firestore.Increment(1)})
             
-            data = data.get().to_dict()
+            data = data.get()
+            data = data.to_dict()
             
             if(data['anonymous']==True):
                   data['author'] = "Anonymous"
             
             return data
-      
-      return "Question Not Found"
+      else:
+            return "Question Not Found"
 
 ###############################################################################
 
@@ -467,6 +473,12 @@ def get_total_users_count():
       
 ###############################################################################
 
+def increase_questions_views():
+      index=db.collection('index').document('index')
+      index.update({"questions": firestore.Increment(1)})
+      
+###############################################################################
+
 def increase_views():
       index=db.collection('index').document('index')
       index.update({"views": firestore.Increment(1)})
@@ -536,8 +548,10 @@ def upvote_ans(question, answer):
 ###############################################################################
 
 def get_total_questions_count():
-      data = db.collection('questions').get()
-      return len(data)
+      data = db.collection('index').document('index').get()
+      data = data.to_dict()
+      count = data['questions']
+      return count
 
 ###############################################################################
 
@@ -588,7 +602,24 @@ def questionsByTag(tag):
       
       return data
       
-# print(questionsByTag('Cp'))
+###############################################################################
+
+def updatePoints(email,increase):
+      try:
+            user = db.collection('users').document(email)
+            userdata = user.get()
+            userdata = userdata.to_dict()
+            points = userdata['points']
+            points = points + increase
+            
+            user.update({
+                  'points':points
+            })
+            return True
+      except:
+            return False
+
+###############################################################################
 ###############################################################################
 
             
