@@ -325,6 +325,9 @@ def add_question(request):
             tags = data['tags']
             anonymous = data['anonymous']
             
+            if(len(tags)==0):
+                return Response("No Tags Found", status=status.HTTP_400_BAD_REQUEST)
+            
             check = checkUserForAddQuestion(email, password,question,tags,anonymous)
             
             updated = updatePoints(email,2)

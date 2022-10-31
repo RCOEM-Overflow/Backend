@@ -66,7 +66,7 @@ class AddQuestionSerializer(serializers.Serializer):
     password= serializers.CharField(max_length=1000)
     anonymous= serializers.BooleanField()
     question= serializers.CharField(max_length=1000)
-    tags= serializers.CharField(max_length=1000)
+    tags= serializers.CharField(max_length=1000,allow_blank=True)
     
 ###############################################################################
 
