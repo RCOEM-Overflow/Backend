@@ -31,6 +31,7 @@ urlpatterns = [
 
 	path('all_contributors',views.all_contributors),
 	path('all_users',views.all_users),
+	path('user_info',views.user_info),
 
 	path('top5_contributors',views.top5_contributors),
 

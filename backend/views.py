@@ -407,6 +407,31 @@ def view_specific_question(request):
 
 ###############################################################################
 
+@api_view(['POST'])
+def user_info(request):
+    """
+    {
+        "username":"noob_pratham23"
+    }
+    """
+    try:
+        serializer = UserInfoSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            data = serializer.data
+            
+            username = data['username']
+            data = get_user_info(username)
+            
+            return Response(data, status=status.HTTP_200_OK) 
+        else:
+            return Response("INVALID DATA", status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response("PLEASE TRY AGAIN", status=status.HTTP_400_BAD_REQUEST)
+
+
+###############################################################################
+
 @api_view(['GET'])
 def all_contributors(request):
     try:

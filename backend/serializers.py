@@ -99,4 +99,9 @@ class SpecificTagSerializer(serializers.Serializer):
 
 ###############################################################################
 
+class UserInfoSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=10000)
+
+###############################################################################
+
 

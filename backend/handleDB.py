@@ -420,6 +420,19 @@ def get_all_users():
       my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
       
       return my_list
+###############################################################################
+
+def get_user_info(username):
+      
+      users = db.collection("users").where('user_name', u'==', username).get()
+      
+      if(len(users)>0):
+      
+            userdata = users[0].to_dict()
+            
+            return userdata
+      
+      return {}
 
 ###############################################################################
 
@@ -430,8 +443,16 @@ def get_all_contributors():
 
       for user in users:
             user_data = user.to_dict()
-            user_data['password']="*****"
-            my_list.append(user_data)    
+            dict={
+                  'name':user_data['name'],
+                  'user_name':user_data['user_name'],
+                  'points':user_data['points'],
+                  'linkedin_url':user_data['linkedin_url'],
+                  'github_url':user_data['github_url']
+            }
+            my_list.append(dict)    
+            
+            # name username score github linkedin 
       
       my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
 
