@@ -231,7 +231,7 @@ def get_trending_questions():
                   data = data.to_dict()
                   answerlen = len(data['answers'])
                   if(answerlen > 0):
-                        dic[(i+1)] = data['views']
+                        dic[(i+1)] = data['upvotes']
 
       sorted_dict = {}
       sorted_keys = sorted(dic, key=dic.get)
@@ -253,6 +253,9 @@ def get_trending_questions():
                   returnmap['author'] = "Anonymous"
                   
             returndata.append(returnmap)
+      
+      returndata = sorted(returndata, key=lambda k: k['upvotes'], reverse=True)
+
       return returndata
 
 ###############################################################################
