@@ -134,6 +134,7 @@ def register_contributor(request):
     """
     {
         "email": "demouser1@gmail.com",
+        "gender": "male",
         "college": "RCOEM",
         "semester": "2nd",
         "branch" : "CSE A",
@@ -154,6 +155,7 @@ def register_contributor(request):
         data = serializer.data
 
         email = data['email']
+        gender = data['gender']
         college = data['college']
         semester = data['semester']
         branch = data['branch']
@@ -168,9 +170,12 @@ def register_contributor(request):
         position = data['position']
 
         skills = covert_string_to_skills_list(skills_str)
+        
+        gender = gender.upper()
 
         user_data = {
             'contributor': True,
+            'gender': gender,
             'college': college,
             'semester': semester,
             'branch': branch,

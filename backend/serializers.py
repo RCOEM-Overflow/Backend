@@ -30,6 +30,7 @@ class UpdatePasswordSerializer(serializers.Serializer):
 
 class ContributorSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length = 100)
+    gender = serializers.CharField(max_length=10)
     college = serializers.CharField(max_length=100)
     semester = serializers.CharField(max_length=100)
     branch = serializers.CharField(max_length=100)
