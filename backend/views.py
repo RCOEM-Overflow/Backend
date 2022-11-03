@@ -468,6 +468,25 @@ def total_views_count(request):
     except:
         return Response(322, status=status.HTTP_400_BAD_REQUEST) 
     
+
+###############################################################################
+
+@api_view(['GET'])
+def front_page_analytics(request):
+    try:
+        increase_views()
+        qcount=get_total_questions_count()
+        vcount=get_total_views_count()
+        ucount = get_total_users_count()
+        data = {
+            'que_count': qcount,
+            'views_count': vcount,
+            'users_count': ucount
+        }
+        return Response(data, status=status.HTTP_200_OK)      
+    except:
+        return Response(322, status=status.HTTP_400_BAD_REQUEST) 
+    
 ###############################################################################
 
 @api_view(['POST'])

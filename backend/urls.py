@@ -33,9 +33,11 @@ urlpatterns = [
 	path('all_users',views.all_users),
 
 	path('top5_contributors',views.top5_contributors),
+
 	path('total_users_count',views.total_users_count),
 	path('total_questions_count',views.total_questions_count),
 	path('total_views_count',views.total_views_count),
+	path('front_page_analytics',views.front_page_analytics),
 
     path('view_all_questions',views.view_all_questions),
     path('view_search_questions',views.view_search_questions),
