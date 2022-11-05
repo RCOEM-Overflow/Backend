@@ -114,7 +114,8 @@ def login(request):
                 isContributor = is_contributor(email)
                 username =  get_username(email)
                 data = {
-                    'contributor':isContributor
+                    'contributor':isContributor,
+                    'username':username
                 }
                 return Response(data, status=status.HTTP_200_OK)
             else:
