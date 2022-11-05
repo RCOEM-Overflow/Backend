@@ -106,6 +106,7 @@ def login(request):
             if(verify_login_by_email(email, password) == 1):
                 print("LOGGED IN SUCCESFULLY")
                 isContributor = is_contributor(email)
+                username =  get_username(email)
                 data = {
                     'contributor':isContributor
                 }
