@@ -451,7 +451,7 @@ def get_user_info(username):
             
             if(userdata['github_url'] != ""):
                   val = userdata['github_url'].split('/')
-                  if(len(val)>=3):
+                  if(len(val)>=4):
                         val = val[3]
                         userdata['github_url'] = val
                   else:
@@ -460,7 +460,7 @@ def get_user_info(username):
             
             if(userdata['linkedin_url'] != ""):
                   val = userdata['linkedin_url'].split('/')
-                  if(len(val)>=3):
+                  if(len(val)>=5):
                         val = val[4]
                         userdata['linkedin_url'] = val
                   else:
@@ -468,7 +468,7 @@ def get_user_info(username):
 
             if(userdata['codechef_url'] != ""):
                   val = userdata['codechef_url'].split('/')
-                  if(len(val)>=4):
+                  if(len(val)>=5):
                         val = val[4]
                         userdata['codechef_url'] = val
                   else:
@@ -476,7 +476,7 @@ def get_user_info(username):
 
             if(userdata['codeforces_url'] != ""):
                   val = userdata['codeforces_url'].split('/')
-                  if(len(val)>=4):
+                  if(len(val)>=5):
                         val = val[4]
                         userdata['codeforces_url'] = val
                   else:
@@ -484,7 +484,7 @@ def get_user_info(username):
 
             if(userdata['leetcode_url'] != ""):
                   val = userdata['leetcode_url'].split('/')
-                  if(len(val)>=3):
+                  if(len(val)>=4):
                         val = val[3]
                         userdata['leetcode_url'] = val
                   else:
@@ -500,22 +500,45 @@ def get_user_info(username):
 def get_all_contributors():
       
       my_list=[]
-      users = db.collection("users").where('contributor', u'==', True).get()
+      users = db.collection('users').where('contributor', u'==', True).get()
 
       for user in users:
             user_data = user.to_dict()
+            
+            l_username = ""
+            g_username = ""
+            
+            if(user_data['github_url'] != ""):
+                  val = user_data['github_url']
+                  val = val.split('/')
+                  if(len(val)>=4):
+                        val = val[3]
+                        g_username = val
+
+            if(user_data['linkedin_url'] != ""):
+                  val = user_data['linkedin_url']
+                  val = val.split('/')
+                  if(len(val)>=5):
+                        val = val[4]
+                        l_username = val
+                        
+            
             dict={
-                  'name':user_data['name'],
-                  'user_name':user_data['user_name'],
-                  'points':user_data['points'],
-                  'linkedin_url':user_data['linkedin_url'],
-                  'github_url':user_data['github_url']
+                  'name': user_data['name'],
+                  'user_name': user_data['user_name'],
+                  'points': user_data['points'],
+                  'linkedin_url': user_data['linkedin_url'],
+                  'github_url': user_data['github_url'],
+                  'linkedin_username': l_username,
+                  'github_username': g_username
             }
+            
+            
             my_list.append(dict)    
             
             # name username score github linkedin 
       
-      my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
+      # my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
 
       return my_list
 
