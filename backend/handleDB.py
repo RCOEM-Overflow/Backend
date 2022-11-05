@@ -360,6 +360,19 @@ def is_contributor(email):
       
 ###############################################################################
 
+def get_username(email):
+      try:
+            user = db.collection('users').document(email).get()
+            userdata=user.to_dict() 
+            
+            username = userdata['user_name'];       
+            return username
+      except:
+            print("ERROR IN VERIFY_LOGIN_BY_EMAIL")
+            return -1
+      
+###############################################################################
+
 def add_authentication_user_data(email,user_data):
       try:
             user = db.collection('users').document(email)
