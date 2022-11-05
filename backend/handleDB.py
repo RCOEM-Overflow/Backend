@@ -719,18 +719,24 @@ def updatePassword(email,newpassword):
 
 # ###############################################################################
 
-def update_users_data_manually():
-      datas = db.collection('users').get()
-      for data in datas:
-            userid = data.id
-            userdata = datas = db.collection('users').document(userid)
-            userdata.update({
-                  'gender':'MALE'
-            })
+# def update_users_data_manually():
+#       datas = db.collection('users').get()
+#       for data in datas:
+#             userid = data.id
+#             userdata = datas = db.collection('users').document(userid)
+#             userdata.update({
+#                   "projectName1" : "",
+#                   "projectDesc1" : "",
+#                   "projectLink1" : "",
+#                   "projectName2" : "",
+#                   "projectDesc2" : "",
+#                   "projectLink2" : ""
+#             })
             
-      return "Questions data updated manually"
+#       return "Questions data updated manually"
 
-update_users_data_manually()
+# update_users_data_manually()
+
 # ###############################################################################
 
 # def questionsByTag(tag):

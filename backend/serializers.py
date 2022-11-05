@@ -63,6 +63,12 @@ class EditProfileSerializer(serializers.Serializer):
     skills = serializers.CharField(max_length=5000)
     company = serializers.CharField(max_length=5000,allow_blank=True)
     position = serializers.CharField(max_length=5000,allow_blank=True)
+    projectName1 = serializers.CharField(max_length=5000,allow_blank=True)
+    projectDesc1 = serializers.CharField(max_length=5000,allow_blank=True)
+    projectLink1 = serializers.CharField(max_length=5000,allow_blank=True)
+    projectName2 = serializers.CharField(max_length=5000,allow_blank=True)
+    projectDesc2 = serializers.CharField(max_length=5000,allow_blank=True)
+    projectLink2 = serializers.CharField(max_length=5000,allow_blank=True)
 
 ###############################################################################
 

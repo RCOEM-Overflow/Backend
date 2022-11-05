@@ -46,7 +46,13 @@ def register(request):
             'leetcode_url': "",
             'other_url': "",
             'company': "",
-            'position': ""
+            'position': "",
+            "projectName1" : "",
+            "projectDesc1" : "",
+            "projectLink1" : "",
+            "projectName2" : "",
+            "projectDesc2" : "",
+            "projectLink2" : ""
         }
 
         email = data['email']
@@ -278,7 +284,13 @@ def edit_profile(request):
         "leetcode_url": "https://leetcode.com/noob_pratham23/",
         "other_url" : "",
         "company" : "",
-        "position" : ""
+        "position" : "",
+        "projectName1" : "",
+        "projectDesc1" : "",
+        "projectLink1" : "",
+        "projectName2" : "",
+        "projectDesc2" : "",
+        "projectLink2" : ""
     }
     """
 
@@ -303,6 +315,12 @@ def edit_profile(request):
         other_url = data['other_url']
         company = data['company']
         position = data['position']
+        projectName1 = data['projectName1']
+        projectDesc1 = data['projectDesc1']
+        projectLink1 = data['projectLink1']
+        projectName2 = data['projectName2']
+        projectDesc2 = data['projectDesc2']
+        projectLink2 = data['projectLink2']
 
         skills = covert_string_to_skills_list(skills_str)
         
@@ -324,7 +342,13 @@ def edit_profile(request):
             'leetcode_url': leetcode_url,
             'other_url': other_url,
             'company': company,
-            'position': position
+            'position': position,
+            'projectName1' : projectName1,
+            'projectDesc1' : projectDesc1,
+            'projectLink1' : projectLink1,
+            'projectName2' : projectName2,
+            'projectDesc2' : projectDesc2,
+            'projectLink2' : projectLink2
         }
         
         doexist = check_email_exist(email)
