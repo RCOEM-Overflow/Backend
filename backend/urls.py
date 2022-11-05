@@ -28,6 +28,7 @@ urlpatterns = [
 	path('login',views.login),
 	path('register_contributor',views.register_contributor),
 	path('update_password',views.update_password),
+	path('edit_profile',views.edit_profile),
 
 	path('all_contributors',views.all_contributors),
 	path('all_users',views.all_users),

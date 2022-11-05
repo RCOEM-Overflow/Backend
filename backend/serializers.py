@@ -46,6 +46,26 @@ class ContributorSerializer(serializers.Serializer):
 
 ###############################################################################
 
+class EditProfileSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length = 100)
+    name = serializers.CharField(max_length = 100)
+    password = serializers.CharField(max_length=100)
+    gender = serializers.CharField(max_length=10)
+    college = serializers.CharField(max_length=100)
+    semester = serializers.CharField(max_length=100)
+    branch = serializers.CharField(max_length=100)
+    linkedin_url = serializers.URLField(max_length=1000)
+    github_url = serializers.URLField(max_length=1000)
+    codechef_url = serializers.URLField(max_length=1000,allow_blank=True)
+    codeforces_url = serializers.URLField(max_length=1000,allow_blank=True)
+    leetcode_url = serializers.URLField(max_length=1000,allow_blank=True)
+    other_url = serializers.URLField(max_length=1000,allow_blank=True)
+    skills = serializers.CharField(max_length=5000)
+    company = serializers.CharField(max_length=5000,allow_blank=True)
+    position = serializers.CharField(max_length=5000,allow_blank=True)
+
+###############################################################################
+
 class UserSerializer(serializers.Serializer):
 	name = serializers.CharField(max_length = 100)
 	email = serializers.EmailField()

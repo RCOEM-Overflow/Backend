@@ -382,6 +382,15 @@ def add_authentication_user_data(email,user_data):
             return 0
 ###############################################################################
 
+def edit_user_data(email,user_data):
+      try:
+            user = db.collection('users').document(email)
+            user.update(user_data)
+            return 1
+      except:
+            return 0
+###############################################################################
+
 def covert_string_to_skills_list(skills_str):
       
       skills=[]

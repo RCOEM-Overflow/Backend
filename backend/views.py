@@ -259,6 +259,97 @@ def update_password(request):
 
 ###############################################################################
 
+@api_view(['POST'])
+def edit_profile(request):
+    """
+    {
+        "email": "rajbhojpr@rknec.edu",
+        "name": "Prathamesh Rajbhoj",
+        "password": "1234",
+        "gender": "male",
+        "college": "RCOEM",
+        "semester": "5th",
+        "branch" : "CSE A",
+        "skills": "C++, C, Java, Python, CP, Django",
+        "linkedin_url": "https://www.linkedin.com/in/prathamesh-rajbhoj-2bb157200/",
+        "github_url" : "https://github.com/Pratham2301",
+        "codechef_url" : "https://www.codechef.com/users/noob_pratham",
+        "codeforces_url": "https://codeforces.com/profile/noob_pratham23",
+        "leetcode_url": "https://leetcode.com/noob_pratham23/",
+        "other_url" : "",
+        "company" : "",
+        "position" : ""
+    }
+    """
+
+    serializer = EditProfileSerializer(data=request.data)
+
+    if serializer.is_valid():
+        data = serializer.data
+
+        email = data['email']
+        name = data['name']
+        password = data['password']
+        gender = data['gender']
+        college = data['college']
+        semester = data['semester']
+        branch = data['branch']
+        skills_str = data['skills']
+        linkedin_url = data['linkedin_url']
+        github_url = data['github_url']
+        codechef_url = data['codechef_url']
+        codeforces_url = data['codeforces_url']
+        leetcode_url = data['leetcode_url']
+        other_url = data['other_url']
+        company = data['company']
+        position = data['position']
+
+        skills = covert_string_to_skills_list(skills_str)
+        
+        gender = gender.upper()
+
+        user_data = {
+            'name': name,
+            'password': password,
+            'contributor': True,
+            'gender': gender,
+            'college': college,
+            'semester': semester,
+            'branch': branch,
+            'skills': skills,
+            'linkedin_url': linkedin_url,
+            'github_url': github_url,
+            'codechef_url': codechef_url,
+            'codeforces_url': codeforces_url,
+            'leetcode_url': leetcode_url,
+            'other_url': other_url,
+            'company': company,
+            'position': position
+        }
+        
+        doexist = check_email_exist(email)
+
+        if (doexist == 0):
+            print("NO USER FOUND")
+            return Response("NO USER FOUND", status=status.HTTP_404_NOT_FOUND)
+
+        elif (doexist == -1):
+            print("ERROR")
+            return Response("PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
+
+        elif (doexist == 1):
+            print("USER FOUND")
+
+            if(edit_user_data(email, user_data) == 1):
+                return Response("PROFILE UPDATED", status=status.HTTP_200_OK)
+            else:
+                print("ERROR IN UPDATING DATA")
+                return Response("PLEASE TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
+
+    return Response("INVALID DATA", status=status.HTTP_400_BAD_REQUEST)
+
+###############################################################################
+
 
 @api_view(['GET'])
 def view_all_questions(request):
