@@ -542,6 +542,7 @@ def get_all_contributors():
             
             dict={
                   'name': user_data['name'],
+                  'rank': 0,
                   'user_name': user_data['user_name'],
                   'points': user_data['points'],
                   'linkedin_url': user_data['linkedin_url'],
@@ -555,9 +556,25 @@ def get_all_contributors():
             
             # name username score github linkedin 
       
-      # my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
+      my_list = sorted(my_list, key=lambda k: k['points'], reverse=True)
+      
+      for i in range(len(my_list)):
+            my_list[i]['rank']=i+1
 
-      return my_list
+      
+      arr1i = slice(0,3)
+      arr2i = slice(3,len(my_list))
+      
+      arr1 = my_list[arr1i]
+      arr2 = my_list[arr2i]
+
+      
+      data = {
+            'top3': arr1,
+            'next':arr2
+      }
+
+      return data
 
 ###############################################################################
 
