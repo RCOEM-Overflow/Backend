@@ -351,7 +351,7 @@ def edit_profile(request):
             'projectDesc2' : projectDesc2,
             'projectLink2' : projectLink2
         }
-        
+
         doexist = check_email_exist(email)
 
         if (doexist == 0):

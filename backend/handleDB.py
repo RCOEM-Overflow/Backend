@@ -66,7 +66,7 @@ def get_search_questions():
                         returnmap['question'] = data['question']
                         question=data['question']
                         # linkstr="http://localhost:3000/answers/"
-                        linkstr="https://rcoem-overflow.netlify.app/answers/"
+                        linkstr="https://college-wit.netlify.app/answers/"
                         for element in question:
                               if(element==' '):
                                     linkstr+="%20"
@@ -111,10 +111,18 @@ def checkUserForAddQuestion(email, password,question,tags,anonymous):
             user = db.collection('users').document(email).get()
             user = user.to_dict()
             pas = user['password']
+            
+            question1 = ""
+
+            for i in question:
+                  if i=='?':
+                        question1 = question1 + "."
+                  else:
+                        question1 = question1 + i
 
             if(pas == password):
                   author = user['user_name']
-                  add_question_db(question,author,tags,anonymous)
+                  add_question_db(question1,author,tags,anonymous)
                   return True
             else :
                   return False
@@ -653,7 +661,7 @@ def upvote_ans(question, answer):
       qdata = db.collection('questions').where("question", "==", question).get()
       quenum = qdata[0].id
       data = qdata[0].to_dict()
-      
+
       dict={
             "answers": data['answers'],
             "author": data['author'],
@@ -663,9 +671,9 @@ def upvote_ans(question, answer):
             "tags": data['tags'],
             "anonymous": data['anonymous']
       }
-      
+
       index=0
-      
+
       for ans in dict["answers"]:
             if(ans["answer"]==answer):
                   # print("found")
