@@ -66,7 +66,7 @@ def get_search_questions():
                         returnmap['question'] = data['question']
                         question=data['question']
                         # linkstr="http://localhost:3000/answers/"
-                        linkstr="https://college-wit.netlify.app/answers/"
+                        linkstr="https://collegewit.netlify.app/answers/"
                         for element in question:
                               if(element==' '):
                                     linkstr+="%20"
