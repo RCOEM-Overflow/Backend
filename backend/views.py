@@ -80,7 +80,7 @@ def register(request):
             return Response("ERROR IN REGISTERING, TRY AGAIN", status=status.HTTP_403_FORBIDDEN)
 
     else:
-        return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Invalid Email", status=status.HTTP_400_BAD_REQUEST)
 
 ###############################################################################
 
@@ -131,7 +131,7 @@ def login(request):
             return Response("PLEASE REGISTER", status=status.HTTP_404_NOT_FOUND)
 
     else:
-        return Response("INVALID SERIALIZED DATA", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Invalid Email", status=status.HTTP_400_BAD_REQUEST)
 
 
 ###############################################################################
